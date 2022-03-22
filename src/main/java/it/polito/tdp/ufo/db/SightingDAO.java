@@ -7,6 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.polito.tdp.ufo.model.Sighting;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 public class SightingDAO {
 
 
@@ -57,6 +61,31 @@ public class SightingDAO {
 			throw new RuntimeException("Database Error in countByShape", e);
 		}
 
+	}
+
+	public ObservableList<Sighting> getRighe() {
+		// TODO Auto-generated method stub
+		ObservableList<Sighting> obs = FXCollections.observableArrayList();
+		try {
+			Connection conn = DBConnect.getConnection();
+
+			String sql2 = "SELECT id,city,shape FROM sighting";
+			
+			PreparedStatement st2 = conn.prepareStatement(sql2);
+			ResultSet res2 = st2.executeQuery() ;
+			
+			while (res2.next()) {
+				obs.add(new Sighting(res2.getInt("id"), res2.getString("city"),res2.getString("shape")));
+				}
+				
+			st2.close();
+			conn.close();
+			return(obs);
+		
+			
+		} catch(SQLException e) {
+			throw new RuntimeException("Database Error in countByShape", e);
+		}
 	}
 
 }

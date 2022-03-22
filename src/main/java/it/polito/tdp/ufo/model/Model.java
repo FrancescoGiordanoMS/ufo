@@ -3,6 +3,8 @@ package it.polito.tdp.ufo.model;
 import java.util.List;
 
 import it.polito.tdp.ufo.db.SightingDAO;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class Model {
 
@@ -19,5 +21,13 @@ public class Model {
 	public int getCountByForma(String forma) {
 		SightingDAO dao = new SightingDAO();
 		return dao.countByShape(forma) ;
+	}
+	
+	ObservableList<Sighting> obs = FXCollections.observableArrayList();
+	
+	public ObservableList<Sighting> getRighe() {
+		SightingDAO dao = new SightingDAO() ;
+		this.obs = dao.getRighe();
+		return this.obs;
 	}
 }
