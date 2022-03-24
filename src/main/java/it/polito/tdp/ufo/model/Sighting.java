@@ -2,6 +2,8 @@ package it.polito.tdp.ufo.model;
 
 import java.util.Objects;
 
+import javafx.beans.property.StringProperty;
+
 public class Sighting {
 	
 	
@@ -45,7 +47,6 @@ public class Sighting {
 	public void setShape(String shape) {
 		this.shape = shape;
 	}
-
 
 	@Override
 	public int hashCode() {

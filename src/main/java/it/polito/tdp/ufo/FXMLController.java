@@ -76,24 +76,28 @@ public class FXMLController {
     @FXML
     void HMod(ActionEvent event) {
 
+		
+		  int id1 = obs.get(index).getId(); 
+		  Sighting Sig = new Sighting(id1,TFCity.getText(),TFShape.getText()); 
+		  obs.set(index, Sig);
+		 
+    	
     }
 
-   private final StringProperty twoWayInput = new SimpleStringProperty();
-    public StringProperty twoWayInputProperty() {return twoWayInput;}
+    //private final StringProperty twoWayInput = new SimpleStringProperty();
+    //public StringProperty twoWayInputProperty() {return twoWayInput;}
     @FXML
     void getSelected(MouseEvent event) {
-    	index = TVUfo.getSelectionModel().getSelectedIndex();
-    	if (index <= -1)
-    		return;
-    	TFId.setText(col_id.getCellData(index).toString());
-    	TFCity.setText(col_city.getCellData(index).toString());
-    	TFShape.setText(col_shape.getCellData(index).toString());
-    	
-    	//TFCity.textProperty().bind(twoWayInputProperty());
-    	Bindings.bindBidirectional(twoWayInputProperty(), TFCity1.textProperty());
-    	Bindings.bindBidirectional(twoWayInputProperty(), TFCity.textProperty());
-    	//Bindings.bindBidirectional(twoWayInputProperty(), col_city.textProperty());
-    	//TVUfo.getSelectionModel().selectedItemProperty().addListener(observableValue, authorProps, authorProps2);
+		/*
+		 * Questo funziona!! Commentato perchè ho introdotto il bind più generale
+		 * che funziona anche con tastiera etc etc.. vedi sotto
+		 * 
+		 * index = TVUfo.getSelectionModel().getSelectedIndex(); if (index <= -1)
+		 * return; TFId.setText(col_id.getCellData(index).toString());
+		 * TFCity.setText(col_city.getCellData(index).toString());
+		 * TFShape.setText(col_shape.getCellData(index).toString());
+		 */
+    	  	
     }
     
     
@@ -103,7 +107,6 @@ public class FXMLController {
     	String forma = boxForma.getValue();
     	int count = model.getCountByForma(forma);
     	txtMessaggio.setText("Gli UFO della forma "+forma+" sono: "+count);
-
     }
     
     public void setModel(Model m) {
@@ -131,7 +134,20 @@ public class FXMLController {
         col_id.setCellValueFactory(new PropertyValueFactory<Sighting,Integer>("id"));
         col_city.setCellValueFactory(new PropertyValueFactory<Sighting,String>("city"));
         col_shape.setCellValueFactory(new PropertyValueFactory<Sighting,String>("shape"));
-           
+        Bindings.bindBidirectional(TFCity.textProperty(), TFCity1.textProperty());
+        //Bindings.bindBidirectional(TFCity.textProperty(), new PropertyValueFactory<Sighting,String>("shape").);
+        //Bindings.bindBidirectional(TFCity.textProperty(), Sighting.);
+        
+        
+        TVUfo.getSelectionModel().selectedItemProperty().addListener((ob, oldval, newVal) -> {
+            if (newVal != null) {
+                TFCity.setText(newVal.getCity());
+                TFShape.setText(newVal.getShape());
+                //TFId.setText(newVal.getId().toString());
+                TFId.setText(String.valueOf(newVal.getId()));
+            }
+        });
+        
     }
   
 }
