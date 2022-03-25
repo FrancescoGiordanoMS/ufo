@@ -69,13 +69,13 @@ public class SightingDAO {
 		try {
 			Connection conn = DBConnect.getConnection();
 
-			String sql2 = "SELECT id,city,shape FROM sighting";
+			String sql2 = "SELECT id,city,shape, datetime FROM sighting";
 			
 			PreparedStatement st2 = conn.prepareStatement(sql2);
 			ResultSet res2 = st2.executeQuery() ;
 			
 			while (res2.next()) {
-				obs.add(new Sighting(res2.getInt("id"), res2.getString("city"),res2.getString("shape")));
+				obs.add(new Sighting(res2.getInt("id"), res2.getString("city"),res2.getString("shape"), res2.getDate("datetime").toLocalDate()));
 				}
 				
 			st2.close();

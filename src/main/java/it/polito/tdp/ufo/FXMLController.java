@@ -1,9 +1,13 @@
 package it.polito.tdp.ufo;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.ufo.model.FormattedDateValueFactory;
 import it.polito.tdp.ufo.model.Model;
 import it.polito.tdp.ufo.model.Sighting;
 import javafx.beans.binding.Bindings;
@@ -15,6 +19,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -56,36 +61,55 @@ public class FXMLController {
 
     @FXML
     private TextField TFCity1;
+    
+    @FXML
+    private DatePicker DPData;
 
     @FXML
     private Button PBCaricaDati;
 
     @FXML
     private TableColumn<Sighting, String> col_shape;
+    
+    @FXML
+    private TableColumn<Sighting, LocalDate> col_date;
+
 
     @FXML
     private TextField TFShape;
 
+    @FXML
+    private Button PBSalva;
 
     
     @FXML
     void handleAdd(ActionEvent event) {
-
+    	//cerco max(id) nel tableview
+    	//......
+		Sighting Sig = new Sighting(9000,TFCity.getText(),TFShape.getText(),DPData.getValue());
+		obs.add(Sig);
+		
     }
 
     @FXML
+    void handleSave(ActionEvent event) {
+
+    }
+    
+    @FXML
     void HMod(ActionEvent event) {
 
-		
-		  int id1 = obs.get(index).getId(); 
-		  Sighting Sig = new Sighting(id1,TFCity.getText(),TFShape.getText()); 
-		  obs.set(index, Sig);
+    	if (index <= -1) {
+    	index = TVUfo.getSelectionModel().getSelectedIndex();   
+    	int id1 = obs.get(index).getId(); 
+		Sighting Sig = new Sighting(id1,TFCity.getText(),TFShape.getText(),); 
+		obs.set(index, Sig);
+    	}
 		 
     	
     }
 
-    //private final StringProperty twoWayInput = new SimpleStringProperty();
-    //public StringProperty twoWayInputProperty() {return twoWayInput;}
+   
     @FXML
     void getSelected(MouseEvent event) {
 		/*
@@ -99,8 +123,6 @@ public class FXMLController {
 		 */
     	  	
     }
-    
-    
     
     @FXML
     void handleConta(ActionEvent event) {
@@ -134,6 +156,10 @@ public class FXMLController {
         col_id.setCellValueFactory(new PropertyValueFactory<Sighting,Integer>("id"));
         col_city.setCellValueFactory(new PropertyValueFactory<Sighting,String>("city"));
         col_shape.setCellValueFactory(new PropertyValueFactory<Sighting,String>("shape"));
+        col_date.setCellValueFactory(new PropertyValueFactory<Sighting,LocalDate>("datetime"));
+        
+        // vedi http://dgimenes.com/blog/2014/03/06/javafx-formatting-data-in-tableview.html
+        col_date.setCellFactory(new FormattedDateValueFactory<Sighting>("datetime","MM/dd/yyyy"));
         Bindings.bindBidirectional(TFCity.textProperty(), TFCity1.textProperty());
         //Bindings.bindBidirectional(TFCity.textProperty(), new PropertyValueFactory<Sighting,String>("shape").);
         //Bindings.bindBidirectional(TFCity.textProperty(), Sighting.);
@@ -143,8 +169,8 @@ public class FXMLController {
             if (newVal != null) {
                 TFCity.setText(newVal.getCity());
                 TFShape.setText(newVal.getShape());
-                //TFId.setText(newVal.getId().toString());
                 TFId.setText(String.valueOf(newVal.getId()));
+                DPData.setValue(newVal.getDatetime());
             }
         });
         
