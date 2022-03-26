@@ -4,10 +4,11 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import it.polito.tdp.ufo.model.FormattedDateValueFactory;
+import it.polito.tdp.ufo.jfxCellValueFactories.FormattedDateValueFactory;
 import it.polito.tdp.ufo.model.Model;
 import it.polito.tdp.ufo.model.Sighting;
 import javafx.beans.binding.Bindings;
@@ -76,6 +77,9 @@ public class FXMLController {
 
 
     @FXML
+    private TableColumn<Sighting, String> col_FormattedDate;
+    
+    @FXML
     private TextField TFShape;
 
     @FXML
@@ -102,8 +106,8 @@ public class FXMLController {
     	if (index <= -1) {
     	index = TVUfo.getSelectionModel().getSelectedIndex();   
     	int id1 = obs.get(index).getId(); 
-		Sighting Sig = new Sighting(id1,TFCity.getText(),TFShape.getText(),); 
-		obs.set(index, Sig);
+		//Sighting Sig = new Sighting(id1,TFCity.getText(),TFShape.getText(),); 
+		//obs.set(index, Sig);
     	}
 		 
     	
@@ -148,6 +152,8 @@ public class FXMLController {
         this.TVUfo.setItems(obs);
     }
     
+    //private Date datatest;
+    
     @FXML
     void initialize() {
         assert boxForma != null : "fx:id=\"boxForma\" was not injected: check your FXML file 'Scene.fxml'.";
@@ -156,10 +162,10 @@ public class FXMLController {
         col_id.setCellValueFactory(new PropertyValueFactory<Sighting,Integer>("id"));
         col_city.setCellValueFactory(new PropertyValueFactory<Sighting,String>("city"));
         col_shape.setCellValueFactory(new PropertyValueFactory<Sighting,String>("shape"));
-        col_date.setCellValueFactory(new PropertyValueFactory<Sighting,LocalDate>("datetime"));
+        //col_date.setCellValueFactory(new PropertyValueFactory<Sighting,LocalDate>("datetime"));
         
         // vedi http://dgimenes.com/blog/2014/03/06/javafx-formatting-data-in-tableview.html
-        col_date.setCellFactory(new FormattedDateValueFactory<Sighting>("datetime","MM/dd/yyyy"));
+        col_FormattedDate.setCellValueFactory(new FormattedDateValueFactory<Sighting>("FormattedDate","MM/dd/yyyy"));
         Bindings.bindBidirectional(TFCity.textProperty(), TFCity1.textProperty());
         //Bindings.bindBidirectional(TFCity.textProperty(), new PropertyValueFactory<Sighting,String>("shape").);
         //Bindings.bindBidirectional(TFCity.textProperty(), Sighting.);
