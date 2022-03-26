@@ -1,21 +1,21 @@
-package it.polito.tdp.ufo.jfxCellValueFactories;
+package it.polito.tdp.ufo.model;
 
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.util.Callback;
+import javafx.beans.value.ObservableValueBase;
 
-// https://www.w3schools.com/java/ref_keyword_implements.asp
-// https://docs.oracle.com/javase/8/javafx/api/javafx/scene/control/TableColumn.html
-// https://openwritings.net/pg/java/java-implement-callback-example
+
 public class FormattedDateValueFactory<EntityType> implements Callback<TableColumn.CellDataFeatures<EntityType, String>, ObservableValue<String>> {
 	private String getterName;
 	private SimpleDateFormat formatter;
-	private LocalDate dd;
 
 	public FormattedDateValueFactory(String fieldName, String dateFormatPattern) {
 		this.getterName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1, fieldName.length());
@@ -26,16 +26,13 @@ public class FormattedDateValueFactory<EntityType> implements Callback<TableColu
 		try {
 			EntityType entity = features.getValue();
 			Method m = entity.getClass().getMethod(getterName);
-			// originale .. Date date = (Date) m.invoke(entity);
-			String date = (String) m.invoke(entity);
-			dd = LocalDate.parse(date);
-			date = dd.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-			// originale String formattedDate = formatter.format(date);		
-			// originale return new SimpleObservableValue<String>(formattedDate);
-			return new SimpleObservableValue<String>(date);
+			Date date = (Date) m.invoke(entity);
+			String formattedDate = formatter.format(date);
+			return new SimpleObservableValue<String>(formattedDate);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 }
+

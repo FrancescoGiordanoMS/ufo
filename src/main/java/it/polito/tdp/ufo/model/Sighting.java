@@ -12,6 +12,7 @@ public class Sighting {
 	String city, shape;
 	Integer id;
 	LocalDate datetime;
+	String formattedDate;
 
 	public Sighting(int id, String city, String shape, LocalDate date) {
 		// TODO Auto-generated constructor stub
@@ -22,6 +23,10 @@ public class Sighting {
 				
 	}
 
+	
+	public String getFormattedDate() {
+		return datetime.toString();
+	}
 	
 	public LocalDate getDatetime() {
 		return datetime;
