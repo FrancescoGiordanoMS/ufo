@@ -2,8 +2,10 @@ package it.polito.tdp.ufo.model;
 
 import java.sql.Date;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Sighting {
@@ -12,7 +14,7 @@ public class Sighting {
 	String city, shape;
 	Integer id;
 	LocalDate datetime;
-	String formattedDate;
+	StringProperty formattedDate;
 
 	public Sighting(int id, String city, String shape, LocalDate date) {
 		// TODO Auto-generated constructor stub
@@ -23,6 +25,16 @@ public class Sighting {
 				
 	}
 
+	
+	public StringProperty FormattedDateProperty() { 
+       	if (formattedDate == null) { 
+       		String dd;
+       		formattedDate = new SimpleStringProperty(this, "datetime");	
+       		dd=datetime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+       		formattedDate.setValue(dd);
+       	}
+        return formattedDate; 
+    } 
 	
 	public String getFormattedDate() {
 		return datetime.toString();

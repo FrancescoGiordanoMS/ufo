@@ -14,6 +14,7 @@ import it.polito.tdp.ufo.model.Sighting;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,10 +24,12 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Callback;
 
 public class FXMLController {
 
@@ -164,8 +167,22 @@ public class FXMLController {
         col_date.setCellValueFactory(new PropertyValueFactory<Sighting,LocalDate>("datetime"));
         
         // vedi http://dgimenes.com/blog/2014/03/06/javafx-formatting-data-in-tableview.html
-        col_FormattedDate.setCellValueFactory(new FormattedDateValueFactory<Sighting>("FormattedDate","MM/dd/yyyy"));
+        // Questo è il primo modo per formattare la colonna data
+        //col_FormattedDate.setCellValueFactory(new FormattedDateValueFactory<Sighting>("FormattedDate","MM/dd/yyyy"));
         Bindings.bindBidirectional(TFCity.textProperty(), TFCity1.textProperty());     
+     
+        // Questo è il secondo modo che mi pare meno contorto
+        col_FormattedDate.setCellValueFactory(new Callback<CellDataFeatures<Sighting, String>, ObservableValue<String>>() {
+            public ObservableValue<String> call(CellDataFeatures<Sighting, String> p) {
+            	StringProperty str = p.getValue().FormattedDateProperty();
+            	String s;
+            	s=str.getName();
+                // p.getValue() returns the Person instance for a particular TableView row
+                return str;
+            }
+         });
+        
+        
         
         TVUfo.getSelectionModel().selectedItemProperty().addListener((ob, oldval, newVal) -> {
             if (newVal != null) {
