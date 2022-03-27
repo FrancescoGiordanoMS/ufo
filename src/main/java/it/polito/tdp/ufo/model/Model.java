@@ -42,7 +42,7 @@ public class Model {
 	}
 
 
-	public boolean DBModify(ObservableList Record) {
+	public boolean DBModify(Sighting Record) {
 		boolean ret = true;
 		SightingDAO dao = new SightingDAO() ;
 		ret = dao.DBModify(Record);

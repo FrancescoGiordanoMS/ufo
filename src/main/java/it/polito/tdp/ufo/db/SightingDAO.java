@@ -113,28 +113,27 @@ public class SightingDAO {
 		}
 	}
 
-	public boolean DBModify(ObservableList<Sighting> Record) {
+	public boolean DBModify(Sighting Record) {
+		boolean ret=true;
 		try {
 			Connection conn = DBConnect.getConnection();
 
 			String sql2 = "update ufo_sightings.sighting set city = ? where id = ?";
 			
 			PreparedStatement st2 = conn.prepareStatement(sql2);
-			//st2.setString(1, Record.);
-			ResultSet res3 = st2.executeQuery() ;
-			
-			while (res3.next()) {
-				obs.add(res3.getString("shape"));
-				}
+			st2.setString(1, Record.getCity());
+			st2.setInt(2, Record.getId());
+			ret = st2.execute() ;
 				
 			st2.close();
 			conn.close();
-			return(true);
+			return(ret);
 			
 		} catch(SQLException e) {
 			throw new RuntimeException("Database Error in countByShape", e);
+			//return(false);
 		}
-		return false;
+		//return(false);
 	}
 
 	

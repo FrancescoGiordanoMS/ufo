@@ -123,7 +123,8 @@ public class FXMLController {
     	if (index >= 0) {
     		TVUfo.getSelectionModel().getSelectedItem().setCity(TFCity.getText());
     		TVUfo.refresh();
-    		model.DBModify(TVUfo.getSelectionModel().getSelectedItem());
+    		Sighting sig = TVUfo.getSelectionModel().getSelectedItem();
+    		model.DBModify(sig);
     		VBoxSalvaCancel.setDisable(true);
     		VBoxButton.setDisable(false);
     		GP.setDisable(true);
