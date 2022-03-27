@@ -29,13 +29,15 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 public class FXMLController {
 
-	private Model model;
-	Integer index = -1;
-
+	 @FXML
+	private GridPane GP;
+	
 	@FXML
     private TableView<Sighting> TVUfo;
     
@@ -46,7 +48,13 @@ public class FXMLController {
     private TableColumn<Sighting, String> col_city;
 
     @FXML
+    private ComboBox<String> CBShape;
+
+    @FXML
     private Button PBMod;
+
+    @FXML
+    private Button PBCancel;
 
     @FXML
     private Label txtMessaggio;
@@ -88,6 +96,17 @@ public class FXMLController {
     @FXML
     private Button PBSalva;
 
+    @FXML
+    private VBox VBoxButton;
+
+    @FXML
+    private VBox VBoxSalvaCancel;
+
+ 
+    //----------------------------------------------------------------------------------------------------
+	private Model model;
+	Integer index = -1;
+    ObservableList<Sighting> obs = FXCollections.observableArrayList();
     
     @FXML
     void handleAdd(ActionEvent event) {
@@ -99,21 +118,33 @@ public class FXMLController {
     }
 
     @FXML
-    void handleSave(ActionEvent event) {
-
+    void handleSave(MouseEvent event) {
+    	index = TVUfo.getSelectionModel().getSelectedIndex();
+    	if (index >= 0) {
+    		TVUfo.getSelectionModel().getSelectedItem().setCity(TFCity.getText());
+    		TVUfo.refresh();
+    		model.DBModify(TVUfo.getSelectionModel().getSelectedItem());
+    		VBoxSalvaCancel.setDisable(true);
+    		VBoxButton.setDisable(false);
+    		GP.setDisable(true);
+    	}
+    }
+    
+    @FXML
+    void handleCancel(ActionEvent event) {
+		VBoxSalvaCancel.setDisable(true);
+		VBoxButton.setDisable(false);
+		GP.setDisable(true);
     }
     
     @FXML
     void HMod(ActionEvent event) {
-
-    	if (index <= -1) {
-    	index = TVUfo.getSelectionModel().getSelectedIndex();   
-    	int id1 = obs.get(index).getId(); 
-		Sighting Sig = new Sighting(id1,TFCity.getText(),TFShape.getText(),DPData.getValue()); 
-		//obs.set(index, Sig);
-    	}
-		 
-    	
+    	index = TVUfo.getSelectionModel().getSelectedIndex();
+    	if (index > -1) {
+		VBoxSalvaCancel.setDisable(false);
+		VBoxButton.setDisable(true);
+		GP.setDisable(false);
+    	}	 	
     }
 
    
@@ -129,6 +160,14 @@ public class FXMLController {
 		 * TFShape.setText(col_shape.getCellData(index).toString());
 		 */
     	  	
+    }
+ 
+    @FXML
+    void handleDistinctShape(MouseEvent event) {
+		ObservableList<String> obsl= FXCollections.observableArrayList();
+		obsl=model.getDistinctShape();
+		CBShape.getItems().clear();
+		CBShape.getItems().addAll(obsl);
     }
     
     @FXML
@@ -148,12 +187,12 @@ public class FXMLController {
     	TableView();
     }
     
-    ObservableList<Sighting> obs = FXCollections.observableArrayList();
     
     public void TableView() {
         obs=model.getRighe();
         this.TVUfo.setItems(obs);
     }
+    
     
      
     @FXML
@@ -182,14 +221,14 @@ public class FXMLController {
             }
          });
         
-        
-        
+            
         TVUfo.getSelectionModel().selectedItemProperty().addListener((ob, oldval, newVal) -> {
             if (newVal != null) {
                 TFCity.setText(newVal.getCity());
                 TFShape.setText(newVal.getShape());
                 TFId.setText(String.valueOf(newVal.getId()));
                 DPData.setValue(newVal.getDatetime());
+                CBShape.setValue(newVal.getShape());
             }
         });
         

@@ -5,6 +5,7 @@ import java.util.List;
 import it.polito.tdp.ufo.db.SightingDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.SelectionModel;
 
 public class Model {
 
@@ -23,6 +24,15 @@ public class Model {
 		return dao.countByShape(forma) ;
 	}
 	
+	public ObservableList<String> getDistinctShape() {
+		ObservableList<String> obsl= FXCollections.observableArrayList();
+		obsl.clear();
+		SightingDAO dao = new SightingDAO();
+		obsl=dao.getDistinctShape();
+		return( obsl);
+		
+	}
+	
 	ObservableList<Sighting> obs = FXCollections.observableArrayList();
 	
 	public ObservableList<Sighting> getRighe() {
@@ -30,4 +40,14 @@ public class Model {
 		this.obs = dao.getRighe();
 		return this.obs;
 	}
+
+
+	public boolean DBModify(ObservableList Record) {
+		boolean ret = true;
+		SightingDAO dao = new SightingDAO() ;
+		ret = dao.DBModify(Record);
+		return ret;
+	}
+
 }
+

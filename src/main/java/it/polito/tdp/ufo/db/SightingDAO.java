@@ -88,4 +88,55 @@ public class SightingDAO {
 		}
 	}
 
+
+	public ObservableList<String> getDistinctShape() {
+		// TODO Auto-generated method stub
+		ObservableList<String> obs = FXCollections.observableArrayList();
+		try {
+			Connection conn = DBConnect.getConnection();
+
+			String sql2 = "	SELECT distinct shape FROM ufo_sightings.sighting order by shape asc";
+			
+			PreparedStatement st2 = conn.prepareStatement(sql2);
+			ResultSet res3 = st2.executeQuery() ;
+			
+			while (res3.next()) {
+				obs.add(res3.getString("shape"));
+				}
+				
+			st2.close();
+			conn.close();
+			return(obs);
+			
+		} catch(SQLException e) {
+			throw new RuntimeException("Database Error in countByShape", e);
+		}
+	}
+
+	public boolean DBModify(ObservableList<Sighting> Record) {
+		try {
+			Connection conn = DBConnect.getConnection();
+
+			String sql2 = "update ufo_sightings.sighting set city = ? where id = ?";
+			
+			PreparedStatement st2 = conn.prepareStatement(sql2);
+			//st2.setString(1, Record.);
+			ResultSet res3 = st2.executeQuery() ;
+			
+			while (res3.next()) {
+				obs.add(res3.getString("shape"));
+				}
+				
+			st2.close();
+			conn.close();
+			return(true);
+			
+		} catch(SQLException e) {
+			throw new RuntimeException("Database Error in countByShape", e);
+		}
+		return false;
+	}
+
+	
+	
 }
