@@ -1,5 +1,7 @@
 package it.polito.tdp.ufo;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,6 +13,7 @@ import java.util.ResourceBundle;
 import it.polito.tdp.ufo.jfxCellValueFactories.FormattedDateValueFactory;
 import it.polito.tdp.ufo.model.Model;
 import it.polito.tdp.ufo.model.Sighting;
+import it.polito.tdp.ufo.model.TestClass;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -105,37 +108,106 @@ public class FXMLController {
  
     //----------------------------------------------------------------------------------------------------
 	private Model model;
+	private enum StatoButtonSave {
+		INSERT,
+		MODIFY,
+		INDEFINITO
+	}
+	private StatoButtonSave ButtonSave;
+	
+	//private String MethodToRun = "";
+
+	
+	/*
+	 * //private String SaveMethod; //EntityType entity = features.getValue();
+	 * //Method m = getMethod(SaveMethod); //String date = (String)
+	 * m.invoke(entity);
+	 * 
+	 * //TestClass tc = new TestClass(); TestClass obj = new TestClass();
+	 * Class<TestClass> classObj = obj.getClass(); Method m1 =
+	 * TestClass.class.getDeclaredMethod("test");
+	 */
+	
 	Integer index = -1;
     ObservableList<Sighting> obs = FXCollections.observableArrayList();
     
     @FXML
     void handleAdd(ActionEvent event) {
+		ButtonSave = StatoButtonSave.INSERT;
+		
+		
+    }
+
+    /**
+     * @param event
+     * @param Object 
+     * @param Object 
+     */
+    @FXML
+    void handleSave(MouseEvent event) { 
+    	if (ButtonSave== StatoButtonSave.INSERT) {
+    		SaveInsert();
+    	}
+    	else if (ButtonSave == StatoButtonSave.MODIFY) {
+    		SaveModify();		
+    	}
+//    	Class<?> c = null;
+//    	boolean result=false;
+//    	try {
+//    		c = Class.forName("it.polito.tdp.ufo.FXMLController");
+//    		//FXMLController obj = new FXMLController();        
+//    		//Method method = null;
+//    		//method = c.getDeclaredMethod(MethodToRun);
+//    		String s = "";
+//    		Method m1 = null;
+//    		Class<?> obj1 = this.getClass();
+//    		Class<?> obj = FXMLController.this.getClass();
+// 		
+//    		//m1 =obj.getDeclaredMethod(MethodToRun);
+//    		m1 =this.getClass().getDeclaredMethod(MethodToRun);
+//    		//m1.setAccessible(true);
+//    		result=(boolean)m1.invoke(obj);
+//    		//result = (boolean)method.invoke(obj);
+//    	} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+//    		// TODO Auto-generated catch block
+//     		e.printStackTrace();
+//    	}    
+    }
+    private boolean SaveInsert() {
     	//cerco max(id) nel tableview
     	//......
 		Sighting Sig = new Sighting(9000,TFCity.getText(),TFShape.getText(),DPData.getValue());
 		obs.add(Sig);
-		
+
+    	boolean ret = true;
+    	return ret;
     }
 
-    @FXML
-    void handleSave(MouseEvent event) {
+    private boolean SaveModify() {
     	index = TVUfo.getSelectionModel().getSelectedIndex();
     	if (index >= 0) {
     		TVUfo.getSelectionModel().getSelectedItem().setCity(TFCity.getText());
-    		TVUfo.refresh();
     		Sighting sig = TVUfo.getSelectionModel().getSelectedItem();
     		model.DBModify(sig);
-    		VBoxSalvaCancel.setDisable(true);
-    		VBoxButton.setDisable(false);
-    		GP.setDisable(true);
+    		TVUfo.refresh();
+    		SetButton(true);
+    		ButtonSave = StatoButtonSave.INDEFINITO;
     	}
+		return(true);
+    }
+    
+    //true=disabilitato   false=abilitato
+    private void SetButton(boolean v) {	
+   		VBoxSalvaCancel.setDisable(v);
+		VBoxButton.setDisable(!v);
+		GP.setDisable(v);
+		//TVUfo.refresh();
     }
     
     @FXML
     void handleCancel(ActionEvent event) {
-		VBoxSalvaCancel.setDisable(true);
-		VBoxButton.setDisable(false);
-		GP.setDisable(true);
+		SetButton(true);
+		ButtonSave = StatoButtonSave.INDEFINITO;
     }
     
     @FXML
@@ -145,6 +217,7 @@ public class FXMLController {
 		VBoxSalvaCancel.setDisable(false);
 		VBoxButton.setDisable(true);
 		GP.setDisable(false);
+		ButtonSave = StatoButtonSave.MODIFY;
     	}	 	
     }
 
@@ -178,9 +251,12 @@ public class FXMLController {
     	txtMessaggio.setText("Gli UFO della forma "+forma+" sono: "+count);
     }
     
+	Method meth = null;
+	
     public void setModel(Model m) {
     	this.model = m ;
     	boxForma.getItems().addAll(this.model.getFormeUFO()) ;
+    	
     }
 
     @FXML
@@ -194,8 +270,33 @@ public class FXMLController {
         this.TVUfo.setItems(obs);
     }
     
+    public void test(String num1, String num2) {System.out.println("sum is:"+num1+num2);  }	// solo per prova, non serve a niente
+    private void testInvoke() throws Exception {
+    	
+    	Class<?> c = null;
+    	  String result="";
+    	  try {
+    	    // Getting Class instance
+    	    c = Class.forName("it.polito.tdp.ufo.FXMLController");
+
+    	    // Getting class object
+    	    FXMLController obj = new FXMLController();        
+    	    Method method = null;
+
+    	    // getting method instance by passing method name and parameter types
+    	    method = c.getDeclaredMethod("test", String.class, String.class);
+
+    	    // invoking method
+    	    result = (String)method.invoke(obj, "Hello", "World");
+    	  } catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+    	    // TODO Auto-generated catch block
+    	    e.printStackTrace();
+    	  }
+    	  System.out.println("Returned result is- " + result);    
+ 
+    }
     
-     
+    
     @FXML
     void initialize() {
         assert boxForma != null : "fx:id=\"boxForma\" was not injected: check your FXML file 'Scene.fxml'.";
@@ -212,15 +313,33 @@ public class FXMLController {
         Bindings.bindBidirectional(TFCity.textProperty(), TFCity1.textProperty());     
      
         // Questo è il secondo modo che mi pare meno contorto
-        col_FormattedDate.setCellValueFactory(new Callback<CellDataFeatures<Sighting, String>, ObservableValue<String>>() {
-            public ObservableValue<String> call(CellDataFeatures<Sighting, String> p) {
+        col_FormattedDate.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Sighting, String>, ObservableValue<String>>() {
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Sighting, String> p) {
             	StringProperty str = p.getValue().FormattedDateProperty();
-            	String s;
-            	s=str.getName();
+            	//String s;
+            	//s=str.getName();
                 // p.getValue() returns the Person instance for a particular TableView row
                 return str;
             }
-         });
+        });
+            
+            try {
+				testInvoke();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+            
+            
+            //Method m1 = FXMLController.class.getDeclaredMethod("test");
+			/*
+			 * //FXMLController obj = new FXMLController(); //Class<?> classObj =
+			 * obj.getClass(); TestClass obj = new TestClass(); //Class classObj =
+			 * obj.getClass(); Method m1 = TestClass.class.getDeclaredMethod("test");
+			 * //m1.invoke(); int x=1;
+			 */
+            
+         
         
             
         TVUfo.getSelectionModel().selectedItemProperty().addListener((ob, oldval, newVal) -> {
