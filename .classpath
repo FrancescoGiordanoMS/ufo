@@ -29,5 +29,16 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="library/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="library/commons-digester-2.1.jar"/>
+	<classpathentry kind="lib" path="library/commons-javaflow-20060411.jar"/>
+	<classpathentry kind="lib" path="library/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="library/core-3.3.0.jar"/>
+	<classpathentry kind="lib" path="library/core-3.3.0-javadoc.jar"/>
+	<classpathentry kind="lib" path="library/jasperreports-6.2.0.jar"/>
+	<classpathentry kind="lib" path="library/jasperreports-fonts-6.2.0.jar"/>
+	<classpathentry kind="lib" path="library/jasperreports-javaflow-6.2.0.jar"/>
+	<classpathentry kind="lib" path="library/jfoenix-8.0.7.jar"/>
+	<classpathentry kind="lib" path="library/mysql-connector-java-5.1.39-bin.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
