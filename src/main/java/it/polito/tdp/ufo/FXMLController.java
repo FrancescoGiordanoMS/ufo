@@ -2,14 +2,20 @@ package it.polito.tdp.ufo;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.report.DataAccessObject;
+import it.polito.tdp.report.PrimoReport;
+import it.polito.tdp.ufo.db.DBConnect;
 import it.polito.tdp.ufo.jfxCellValueFactories.FormattedDateValueFactory;
 import it.polito.tdp.ufo.model.Model;
 import it.polito.tdp.ufo.model.Sighting;
@@ -100,6 +106,9 @@ public class FXMLController {
     private Button PBSalva;
 
     @FXML
+    private Button PBStampa;
+
+    @FXML
     private VBox VBoxButton;
 
     @FXML
@@ -137,7 +146,34 @@ public class FXMLController {
 		
 		
     }
+    
+    @FXML
+    void handleStampa(ActionEvent event) {
+		printReport();
+    }
 
+	//private DBConnection database;
+	private Connection connect;
+	private Map<String, Object> map;	
+    DataAccessObject dao= new DataAccessObject();
+    
+	public void printReport() {
+		Connection connect;
+		try {
+			connect = DBConnect.getConnection();
+			map = new HashMap<String, Object>();		
+			PrimoReport.createReport(connect, map, dao.getRep());
+			//.createReport(connect, map, dao.getReport("account_report", "report_jasper"));
+			PrimoReport.showReport();
+			connect.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//database = new DBConnect();
+		//connect = database.getConnection();
+
+	}
     /**
      * @param event
      * @param Object 
