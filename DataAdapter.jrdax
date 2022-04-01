@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<jdbcDataAdapter class="net.sf.jasperreports.data.jdbc.JdbcDataAdapterImpl">
+  <name>da</name>
+  <driver>org.mariadb.jdbc.Driver</driver>
+  <username>root</username>
+  <password>pwdMySql60@</password>
+  <url>jdbc:mysql://localhost/ufo_sightings</url>
+  <database></database>
+  <savePassword>true</savePassword>
+  <serverAddress></serverAddress>
+</jdbcDataAdapter>
