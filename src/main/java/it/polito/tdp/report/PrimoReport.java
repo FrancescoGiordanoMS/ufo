@@ -31,10 +31,10 @@ public abstract class PrimoReport {
 		
 	public static void createReport(Connection connect, Map<String, Object> map, InputStream by) {
 		try {
-			//JasperDesign by1 = JRXmlLoader.load("C:\\Users\\francesco\\git\\ufo\\report\\Wood.jrxml");
-			jreport = JasperCompileManager.compileReport(by);
-			//jreport = (JasperReport)JRLoader.loadObjectFromFile("C:\\Users\\francesco\\git\\ufo\\report\\Wood.jasper");
-			jreport = (JasperReport)JRLoader.loadObject(by);
+			//JasperDesign by1 = JRXmlLoader.load("Wood.jrxml");
+			//jreport = JasperCompileManager.compileReport(by);
+			jreport = (JasperReport)JRLoader.loadObjectFromFile("Wood.jasper");
+			//jreport = (JasperReport)JRLoader.loadObject(by);
 			jprint = JasperFillManager.fillReport(jreport, map, connect);		
 		}catch(Exception e) {
 			e.printStackTrace();

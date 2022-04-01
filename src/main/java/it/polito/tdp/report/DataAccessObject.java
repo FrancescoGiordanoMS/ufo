@@ -119,7 +119,8 @@ public class DataAccessObject {
 	public InputStream getRep() {
 		FileInputStream fis=null;
 		try {
-			fis = new FileInputStream(new File("C:\\Users\\francesco\\git\\ufo\\report\\Wood.jrxml"));
+			//fis = new FileInputStream(new File("C:\\Users\\francesco\\git\\ufo\\report\\Wood.jasper"));
+			fis = new FileInputStream(new File("Wood.jasper"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -60,7 +60,45 @@
 	       <artifactId>slf4j-log4j12</artifactId>
 	       <version>1.7.5</version>
 	    </dependency>
-        
+	    <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.2</version>
+		</dependency>
+  	   <dependency>
+        <groupId>commons-collections4</groupId>
+        <artifactId>commons-collections4</artifactId>
+        <version>4.4</version>
+		</dependency>
+		<dependency>
+        <groupId>commons-digester</groupId>
+        <artifactId>commons-digester</artifactId>
+        <version>2.1</version>
+		</dependency>
+		<dependency>
+        <groupId>spring-beans</groupId>
+        <artifactId>spring-beans</artifactId>
+        <version>5.3.17</version>
+		</dependency>
+        <dependency>
+        <groupId>spring-core</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>5.3.17</version>
+		</dependency>
+        <dependency>
+        <groupId>spring-jcl</groupId>
+        <artifactId>spring-jcl</artifactId>
+        <version>5.3.17</version>
+		</dependency>
+        <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>2.10.14</version>
+		</dependency>				
+				
+		
+		
+		
     </dependencies>
     <build>
         <plugins>

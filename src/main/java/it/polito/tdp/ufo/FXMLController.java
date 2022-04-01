@@ -375,7 +375,9 @@ public class FXMLController {
 			 * //m1.invoke(); int x=1;
 			 */
             
-         
+            
+            System.out.println("Working Directory = " + System.getProperty("user.dir"));
+            
         
             
         TVUfo.getSelectionModel().selectedItemProperty().addListener((ob, oldval, newVal) -> {

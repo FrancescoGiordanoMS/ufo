@@ -14,5 +14,12 @@ public class DBConnect {
 		//return DriverManager.getConnection(jdbcURL) ;
 		return conn ;
 	}
+	
+	public static Connection getConnectMaria() throws SQLException {
+		String jdbcURL = "jdbc:mariadb://localhost:3306/ufo_sightings?user=root&password=pwdMySql60@";
+		conn=DriverManager.getConnection(jdbcURL) ;
+		//return DriverManager.getConnection(jdbcURL) ;
+		return conn ;
+	}
 
 }
