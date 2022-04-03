@@ -11,7 +11,8 @@
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
 	<style name="Detail" fontName="Arial" fontSize="12"/>
 	<queryString language="SQL">
-		<![CDATA[select id, city, shape from ufo_sightings.sighting where city = 'carrara']]>
+		<![CDATA[select id, city, shape from ufo_sightings.sighting 
+where (city = 'carrara' or city = 'massa')]]>
 	</queryString>
 	<field name="id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="id"/>
@@ -22,12 +23,14 @@
 		<property name="com.jaspersoft.studio.field.name" value="city"/>
 		<property name="com.jaspersoft.studio.field.label" value="city"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="sighting"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="shape" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="shape"/>
 		<property name="com.jaspersoft.studio.field.label" value="shape"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="sighting"/>
 	</field>
+	<sortField name="city"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

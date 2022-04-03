@@ -16,15 +16,15 @@ public class Sighting {
 	LocalDate datetime;
 	StringProperty formattedDate;
 
-	public Sighting(int id, String city, String shape, LocalDate date) {
-		// TODO Auto-generated constructor stub
-		this.id = id;
-		this.city=city;
-		this.shape=shape;	
-		this.datetime=date;
-				
-	}
-
+//	public Sighting(int id, String city, String shape, LocalDate date) {
+//		// TODO Auto-generated constructor stub
+//		this.id = id;
+//		this.city=city;
+//		this.shape=shape;	
+//		this.datetime=date;
+//				
+//	}
+	public Sighting() {	}
 	
 	public StringProperty FormattedDateProperty() { 
        	if (formattedDate == null) { 
