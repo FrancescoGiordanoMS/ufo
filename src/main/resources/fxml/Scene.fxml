@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -21,7 +22,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="1.7976931348623157E308" prefHeight="574.0" prefWidth="718.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.tdp.ufo.FXMLController">
+<BorderPane maxHeight="1.7976931348623157E308" prefHeight="574.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.tdp.ufo.FXMLController">
    <center>
       <HBox>
          <children>
@@ -140,6 +141,12 @@
                <HBox.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>
+            </VBox>
+            <VBox prefHeight="200.0">
+               <children>
+                  <ImageView fx:id="IMV" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  <Pagination fx:id="pagination" maxHeight="279.0" maxWidth="200.0" prefHeight="279.0" prefWidth="200.0" />
+               </children>
             </VBox>
          </children>
       </HBox>

@@ -1,8 +1,14 @@
 package it.polito.tdp.ufo;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Paths;
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,11 +19,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.rendering.PDFRenderer;
+
 import it.polito.tdp.report.DataAccessObject;
 import it.polito.tdp.report.PrimoReport;
 import it.polito.tdp.ufo.db.DBConnect;
 import it.polito.tdp.ufo.jfxCellValueFactories.FormattedDateValueFactory;
 import it.polito.tdp.ufo.model.Model;
+import it.polito.tdp.ufo.model.MyPdfReader;
 import it.polito.tdp.ufo.model.Sighting;
 import it.polito.tdp.ufo.model.TestClass;
 import javafx.beans.binding.Bindings;
@@ -32,11 +42,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -88,6 +101,10 @@ public class FXMLController {
 
 	@FXML
 	private Button PBCaricaDati;
+	
+	 @FXML
+	 private ImageView IMV;
+
 
 	@FXML
 	private TableColumn<Sighting, String> col_shape;
@@ -113,6 +130,9 @@ public class FXMLController {
 
 	@FXML
 	private VBox VBoxSalvaCancel;
+	
+	@FXML
+    private Pagination pagination;
 
 
 	//----------------------------------------------------------------------------------------------------
@@ -133,6 +153,30 @@ public class FXMLController {
 		//printReport();
 	}
 
+	private void viewJpg() throws Exception {
+			FileInputStream inputstream = new FileInputStream("C:\\Users\\giord\\git\\ufo\\moto.jpg");
+			Image image = new Image(inputstream); 
+	        IMV.setImage(image);
+	        inputstream.close();    
+	}
+	
+	private void ReadPdfFile() throws IOException  {
+		File file = new File("C:\\Users\\giord\\git\\ufo\\FIlePdf.pdf");
+		FileInputStream fis = new FileInputStream(file);
+		PDDocument pdfDoc = PDDocument.load(fis);
+		System.out.println("Numero pagine pdf:"+pdfDoc.getPages().getCount());
+		//pdfDoc.
+		pdfDoc.close();
+		
+		
+		MyPdfReader model = new MyPdfReader(Paths.get("FilePdf.pdf"));
+        pagination.setPageCount(model.numPages());
+        pagination.setPageFactory(index -> new ImageView(model.getImage(index)));
+		
+		
+		
+	}
+	
 	/**
 	 * @param event
 	 * @param Object 
@@ -299,6 +343,14 @@ public class FXMLController {
 				return str;
 			}
 		});
+		
+		try {
+			viewJpg();
+			ReadPdfFile();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		//		try {
 		//			testInvoke();

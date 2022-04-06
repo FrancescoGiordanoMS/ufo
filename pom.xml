@@ -49,22 +49,27 @@
 		    <artifactId>slf4j-api</artifactId>
 		    <version>1.7.30</version>
 		</dependency>
-		<dependency>
-		    <groupId>org.slf4j</groupId>
-		    <artifactId>slf4j-simple</artifactId>
-		    <version>1.7.30</version>
-		    <scope>test</scope>
-		</dependency>
+		
+		
 		<dependency>
 	       <groupId>org.slf4j</groupId>
 	       <artifactId>slf4j-log4j12</artifactId>
 	       <version>1.7.5</version>
 	    </dependency>
-	    <dependency>
-        <groupId>commons-logging</groupId>
-        <artifactId>commons-logging</artifactId>
-        <version>1.2</version>
+	    
+	    
+	    
+	    <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
+		<dependency>
+		    <groupId>org.openjfx</groupId>
+		    <artifactId>javafx-swing</artifactId>
+		    <version>11-ea+24</version>
 		</dependency>
+			    
+	    
+	    
+	    
+		
   	   <dependency>
         <groupId>commons-collections4</groupId>
         <artifactId>commons-collections4</artifactId>
@@ -94,7 +99,29 @@
         <groupId>joda-time</groupId>
         <artifactId>joda-time</artifactId>
         <version>2.10.14</version>
-		</dependency>				
+		</dependency>	
+		
+		
+		<!-- https://mvnrepository.com/artifact/org.apache.pdfbox/pdfbox -->
+		<dependency>
+		    <groupId>org.apache.pdfbox</groupId>
+		    <artifactId>pdfbox</artifactId>
+		    <version>2.0.25</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.pdfbox/fontbox -->
+		<dependency>
+		    <groupId>org.apache.pdfbox</groupId>
+		    <artifactId>fontbox</artifactId>
+		    <version>2.0.25</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
+		<dependency>
+		    <groupId>commons-logging</groupId>
+		    <artifactId>commons-logging</artifactId>
+		    <version>1.2</version>
+		</dependency>
+		
+						
 				
 		
 		
@@ -102,6 +129,19 @@
     </dependencies>
     <build>
         <plugins>
+        
+        
+        <plugin>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-maven-plugin</artifactId>
+			<version>11</version>
+			<configuration>
+				<mainClass>it.polito.tdp.ufo.main</mainClass>
+			</configuration>
+		</plugin>
+        
+        
+        
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -121,46 +161,9 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <executions>
-                    <execution>
-                        <id>unpack-dependencies</id>
-                        
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>${java.home}/../bin/javafxpackager</executable>
-                            <arguments>
-                                <argument>-createjar</argument>
-                                <argument>-nocss2bin</argument>
-                                <argument>-appclass</argument>
-                                <argument>${mainClass}</argument>
-                                <argument>-srcdir</argument>
-                                <argument>${project.build.directory}/classes</argument>
-                                <argument>-outdir</argument>
-                                <argument>${project.build.directory}</argument>
-                                <argument>-outfile</argument>
-                                <argument>${project.build.finalName}.jar</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>default-cli</id>
-                        <goals>
-                            <goal>exec</goal>                            
-                        </goals>
-                        <configuration>
-                            <executable>${java.home}/bin/java</executable>
-                            <commandlineArgs>${runfx.args}</commandlineArgs>
-                        </configuration>
-                    </execution>
-                </executions>  
-            </plugin>
+                 
+          
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -173,6 +176,8 @@
                     </compilerArguments>
                 </configuration>
             </plugin>
+            
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -183,7 +188,26 @@
                     </additionalClasspathElements>
                 </configuration>
             </plugin>
-        </plugins>
+        
+        
+        <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.2</version>
+                <configuration>
+                    <archive>
+                    	<manifest>
+                        <addClasspath>true</addClasspath>
+                        <classpathPrefix>lib/</classpathPrefix>
+                        <mainClass>it.polito.tdp.ufo.Main</mainClass>
+                    	</manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        
+    </plugins>
+        
+        
     </build>
 
 </project>
