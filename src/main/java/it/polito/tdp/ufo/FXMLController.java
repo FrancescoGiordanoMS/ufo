@@ -1,12 +1,17 @@
 package it.polito.tdp.ufo;
 
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
@@ -18,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+
+import javax.imageio.ImageIO;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -36,7 +43,9 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -50,8 +59,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
@@ -74,7 +86,7 @@ public class FXMLController {
 
 	@FXML
 	private Button PBMod;
-
+	
 	@FXML
 	private Button PBCancel;
 
@@ -147,6 +159,35 @@ public class FXMLController {
 	Integer index = -1;
 	ObservableList<Sighting> obs = FXCollections.observableArrayList();
 
+	
+	
+	
+	//-----------------------------------------------------------------------------------------
+	// Drag & Drop Immagini
+	//-----------------------------------------------------------------------------------------
+	@FXML
+    void handleDragOver(DragEvent event) {
+		if (event.getDragboard().hasFiles()) {
+			event.acceptTransferModes(TransferMode.ANY);
+		}
+	}
+	@FXML
+	void handleDragDropped(DragEvent event) {
+		List<File> files=event.getDragboard().getFiles();
+		Image img;
+		try {
+			img = new Image(new FileInputStream(files.get(0)));
+			IMV.setImage(img);
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+
+	
+	
+	
 	@FXML
 	void handleStampa(ActionEvent event) {
 		PrimoReport.printReport();
@@ -154,14 +195,16 @@ public class FXMLController {
 	}
 
 	private void viewJpg() throws Exception {
-			FileInputStream inputstream = new FileInputStream("C:\\Users\\giord\\git\\ufo\\moto.jpg");
+			//FileInputStream inputstream = new FileInputStream("C:\\Users\\giord\\git\\ufo\\moto.jpg");
+		FileInputStream inputstream = new FileInputStream("moto.jpg");
 			Image image = new Image(inputstream); 
 	        IMV.setImage(image);
 	        inputstream.close();    
 	}
 	
 	private void ReadPdfFile() throws IOException  {
-		File file = new File("C:\\Users\\giord\\git\\ufo\\FIlePdf.pdf");
+		//File file = new File("C:\\Users\\giord\\git\\ufo\\FIlePdf.pdf");
+		File file = new File("FIlePdf.pdf");
 		FileInputStream fis = new FileInputStream(file);
 		PDDocument pdfDoc = PDDocument.load(fis);
 		System.out.println("Numero pagine pdf:"+pdfDoc.getPages().getCount());
@@ -210,9 +253,13 @@ public class FXMLController {
 
 	private boolean SaveModify() {
 		index = TVUfo.getSelectionModel().getSelectedIndex();
+		BufferedImage bi;
+		Image im;
 		if (index >= 0) {
 			TVUfo.getSelectionModel().getSelectedItem().setCity(TFCity.getText());
 			Sighting sig = TVUfo.getSelectionModel().getSelectedItem();
+			//bi = SwingFXUtils.fromFXImage(IMV.getImage(),null);
+			//sig.setBinaryField(SwingFXUtils.fromFXImage(IMV.getImage(),null));
 			model.DBModify(sig);
 			TVUfo.refresh();
 			SetButton(true);
@@ -336,7 +383,7 @@ public class FXMLController {
 		//col_FormattedDate.setCellValueFactory(new FormattedDateValueFactory<Sighting>("FormattedDate","MM/dd/yyyy"));
 		Bindings.bindBidirectional(TFCity.textProperty(), TFCity1.textProperty());     
 
-		// Questo è il secondo modo che mi pare meno contorto
+		// Questo è il secondo modo che mi pare meno contorto... vedi formattazione date
 		col_FormattedDate.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Sighting, String>, ObservableValue<String>>() {
 			public ObservableValue<String> call(TableColumn.CellDataFeatures<Sighting, String> p) {
 				StringProperty str = p.getValue().FormattedDateProperty();
@@ -345,8 +392,8 @@ public class FXMLController {
 		});
 		
 		try {
-			viewJpg();
-			ReadPdfFile();
+			//viewJpg();
+			//ReadPdfFile();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -378,6 +425,25 @@ public class FXMLController {
 				TFId.setText(String.valueOf(newVal.getId()));
 				DPData.setValue(newVal.getDatetime());
 				CBShape.setValue(newVal.getShape());
+				Blob BlobImage = newVal.getBinaryField();
+				if (BlobImage == null) {
+					IMV.setImage(null);
+				} 
+				else {
+				InputStream is;
+				try {
+					is = new BufferedInputStream(BlobImage.getBinaryStream());
+					BufferedImage bi = ImageIO.read(is);
+					Image image = SwingFXUtils.toFXImage(bi,null);
+					IMV.setImage(image);
+					is.close();
+				}
+				catch (SQLException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				}
+
 			}
 		});
 

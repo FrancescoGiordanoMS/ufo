@@ -1,6 +1,7 @@
 package it.polito.tdp.ufo.db;
 
 import java.lang.reflect.*;
+import java.sql.Blob;
 //import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -70,7 +71,7 @@ public class SightingDAO {
 	public ObservableList<Sighting> getRighe() {
 		ObservableList<Sighting> obs = FXCollections.observableArrayList();
 		try {
-			String sql2 = "SELECT id,city,shape, datetime FROM sighting";
+			String sql2 = "SELECT id,city,shape, datetime, BinaryField, TypeBinary FROM sighting";
 			Connection conn = DBConnect.getConnection();
 			PreparedStatement st2 = conn.prepareStatement(sql2);
 			ResultSet res2 = st2.executeQuery() ;
@@ -133,6 +134,10 @@ public class SightingDAO {
 					m=c.getMethod(setMethod,cArg);
 					rv = m.invoke(sig, res2.getDate(ix).toLocalDate());
 					break;
+				case "BLOB":
+					cArg[0] = Blob.class;
+					m=c.getMethod(setMethod,cArg);
+					rv = m.invoke(sig, res2.getBlob(ix));
 				}
  			} 
 			//Class<Sighting> c = sig;
@@ -203,11 +208,14 @@ public class SightingDAO {
 		try {
 			Connection conn = DBConnect.getConnection();
 
-			String sql2 = "update ufo_sightings.sighting set city = ? where id = ?";
+			String sql2 = "update ufo_sightings.sighting set city = ?, "+
+							"BinaryField = ?, TypeBinary = ? where id = ?";
 
 			PreparedStatement st2 = conn.prepareStatement(sql2);
 			st2.setString(1, Record.getCity());
-			st2.setInt(2, Record.getId());
+			st2.setBlob(2,Record.getBinaryField());
+			st2.setString(3,Record.getTypeBinary());
+			st2.setInt(4, Record.getId());
 			ret = st2.execute() ;
 
 			st2.close();

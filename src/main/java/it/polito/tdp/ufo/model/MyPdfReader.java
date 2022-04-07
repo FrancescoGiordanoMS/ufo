@@ -46,7 +46,9 @@ private static final Logger logger = Logger.getLogger(MyPdfReader.class.getName(
     public Image getImage(int pageNumber) {
         BufferedImage pageImage;
         try {
-            pageImage = renderer.renderImage(pageNumber);
+            //pageImage = renderer.renderImage(pageNumber);
+        	pageImage = renderer.renderImageWithDPI(pageNumber,30);
+        	
         } catch (IOException ex) {
             throw new UncheckedIOException("PDFRenderer throws IOException", ex);
         }

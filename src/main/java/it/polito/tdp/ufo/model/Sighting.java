@@ -1,6 +1,6 @@
 package it.polito.tdp.ufo.model;
 
-import java.sql.Date;
+import java.sql.Blob;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -15,8 +15,26 @@ public class Sighting {
 	Integer id;
 	LocalDate datetime;
 	StringProperty formattedDate;
+	String TypeBinary;
+	Blob BinaryField;
 
-//	public Sighting(int id, String city, String shape, LocalDate date) {
+public String getTypeBinary() {
+		return TypeBinary;
+	}
+
+	public void setTypeBinary(String typeBinary) {
+		TypeBinary = typeBinary;
+	}
+
+	public Blob getBinaryField() {
+		return BinaryField;
+	}
+
+	public void setBinaryField(Blob binaryField) {
+		BinaryField = binaryField;
+	}
+
+	//	public Sighting(int id, String city, String shape, LocalDate date) {
 //		// TODO Auto-generated constructor stub
 //		this.id = id;
 //		this.city=city;

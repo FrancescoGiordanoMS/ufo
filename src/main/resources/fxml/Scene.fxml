@@ -144,9 +144,12 @@
             </VBox>
             <VBox prefHeight="200.0">
                <children>
-                  <ImageView fx:id="IMV" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                  <Pagination fx:id="pagination" maxHeight="279.0" maxWidth="200.0" prefHeight="279.0" prefWidth="200.0" />
+                  <ImageView fx:id="IMV" fitHeight="150.0" fitWidth="200.0" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" pickOnBounds="true" preserveRatio="true" />
+                  <Pagination fx:id="pagination" maxHeight="600.0" minHeight="279.0" prefHeight="600.0" />
                </children>
+               <HBox.margin>
+                  <Insets right="10.0" />
+               </HBox.margin>
             </VBox>
          </children>
       </HBox>
