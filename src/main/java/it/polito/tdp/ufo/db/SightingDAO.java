@@ -134,7 +134,7 @@ public class SightingDAO {
 					m=c.getMethod(setMethod,cArg);
 					rv = m.invoke(sig, res2.getDate(ix).toLocalDate());
 					break;
-				case "BLOB":
+				case "BLOB", "LONGBLOB":
 					cArg[0] = Blob.class;
 					m=c.getMethod(setMethod,cArg);
 					rv = m.invoke(sig, res2.getBlob(ix));

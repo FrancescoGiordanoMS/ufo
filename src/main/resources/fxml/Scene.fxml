@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
@@ -142,10 +143,31 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </HBox.margin>
             </VBox>
-            <VBox prefHeight="200.0">
+            <VBox prefHeight="519.0" prefWidth="262.0">
                <children>
-                  <ImageView fx:id="IMV" fitHeight="150.0" fitWidth="200.0" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" pickOnBounds="true" preserveRatio="true" />
-                  <Pagination fx:id="pagination" maxHeight="600.0" minHeight="279.0" prefHeight="600.0" />
+                  <Pane prefHeight="249.0" prefWidth="262.0" style="-fx-border-color: black;" styleClass="image-view-wrapper" stylesheets="@../styles/Styles.css">
+                     <children>
+                        <ImageView fx:id="IMV" fitHeight="231.0" fitWidth="260.0" layoutX="1.0" onDragDropped="#handleDragDropped" onDragOver="#handleDragOver" onMouseClicked="#handleMenuContestuale" pickOnBounds="true" preserveRatio="true">
+                           <effect>
+                              <Lighting>
+                                 <bumpInput>
+                                    <Shadow />
+                                 </bumpInput>
+                                 <light>
+                                    <Light.Distant />
+                                 </light>
+                              </Lighting>
+                           </effect>
+                        </ImageView>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Pane>
+                  <Pagination fx:id="pagination" maxHeight="600.0" minHeight="279.0" prefHeight="351.0" prefWidth="262.0">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin></Pagination>
                </children>
                <HBox.margin>
                   <Insets right="10.0" />

@@ -49,6 +49,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
@@ -60,6 +61,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
@@ -160,6 +162,15 @@ public class FXMLController {
 	ObservableList<Sighting> obs = FXCollections.observableArrayList();
 
 	
+	@FXML
+    void handleMenuContestuale(MouseEvent e) {
+		ContextMenu cm = MenuContestuale.getMenuContestuale();
+		if (e.getButton() == MouseButton.SECONDARY) {
+            cm.show(IMV, e.getScreenX(), e.getScreenY());
+        } else {
+            System.out.println("No right click");
+        }
+    }
 	
 	
 	//-----------------------------------------------------------------------------------------
@@ -195,7 +206,6 @@ public class FXMLController {
 	}
 
 	private void viewJpg() throws Exception {
-			//FileInputStream inputstream = new FileInputStream("C:\\Users\\giord\\git\\ufo\\moto.jpg");
 		FileInputStream inputstream = new FileInputStream("moto.jpg");
 			Image image = new Image(inputstream); 
 	        IMV.setImage(image);
@@ -203,21 +213,15 @@ public class FXMLController {
 	}
 	
 	private void ReadPdfFile() throws IOException  {
-		//File file = new File("C:\\Users\\giord\\git\\ufo\\FIlePdf.pdf");
 		File file = new File("FIlePdf.pdf");
 		FileInputStream fis = new FileInputStream(file);
 		PDDocument pdfDoc = PDDocument.load(fis);
 		System.out.println("Numero pagine pdf:"+pdfDoc.getPages().getCount());
 		//pdfDoc.
 		pdfDoc.close();
-		
-		
 		MyPdfReader model = new MyPdfReader(Paths.get("FilePdf.pdf"));
         pagination.setPageCount(model.numPages());
         pagination.setPageFactory(index -> new ImageView(model.getImage(index)));
-		
-		
-		
 	}
 	
 	/**
@@ -238,7 +242,6 @@ public class FXMLController {
 	private boolean SaveInsert() {
 		//cerco max(id) nel tableview
 		//......
-		//Sighting Sig = new Sighting(9000,TFCity.getText(),TFShape.getText(),DPData.getValue());
 		Sighting Sig = new Sighting();
 		Sig.setCity(TFCity.getText());
 		Sig.setShape(TFShape.getText());
@@ -258,8 +261,7 @@ public class FXMLController {
 		if (index >= 0) {
 			TVUfo.getSelectionModel().getSelectedItem().setCity(TFCity.getText());
 			Sighting sig = TVUfo.getSelectionModel().getSelectedItem();
-			//bi = SwingFXUtils.fromFXImage(IMV.getImage(),null);
-			//sig.setBinaryField(SwingFXUtils.fromFXImage(IMV.getImage(),null));
+			sig.setImage(IMV.getImage());
 			model.DBModify(sig);
 			TVUfo.refresh();
 			SetButton(true);
@@ -425,24 +427,26 @@ public class FXMLController {
 				TFId.setText(String.valueOf(newVal.getId()));
 				DPData.setValue(newVal.getDatetime());
 				CBShape.setValue(newVal.getShape());
-				Blob BlobImage = newVal.getBinaryField();
-				if (BlobImage == null) {
-					IMV.setImage(null);
-				} 
-				else {
-				InputStream is;
-				try {
-					is = new BufferedInputStream(BlobImage.getBinaryStream());
-					BufferedImage bi = ImageIO.read(is);
-					Image image = SwingFXUtils.toFXImage(bi,null);
-					IMV.setImage(image);
-					is.close();
-				}
-				catch (SQLException | IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				}
+				IMV.setImage(newVal.getImage());
+				
+//				Blob BlobImage = newVal.getBinaryField();
+//				if (BlobImage == null) {
+//					IMV.setImage(null);
+//				} 
+//				else {
+//				InputStream is;
+//				try {
+//					is = new BufferedInputStream(BlobImage.getBinaryStream());
+//					BufferedImage bi = ImageIO.read(is);
+//					Image image = SwingFXUtils.toFXImage(bi,null);
+//					IMV.setImage(image);
+//					is.close();
+//				}
+//				catch (SQLException | IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				}
 
 			}
 		});

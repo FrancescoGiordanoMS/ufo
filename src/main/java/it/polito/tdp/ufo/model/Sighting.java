@@ -1,12 +1,23 @@
 package it.polito.tdp.ufo.model;
 
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Blob;
+import java.sql.SQLException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+import javax.imageio.ImageIO;
+import javax.sql.rowset.serial.SerialBlob;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.Image;
 
 public class Sighting {
 	
@@ -17,9 +28,35 @@ public class Sighting {
 	StringProperty formattedDate;
 	String TypeBinary;
 	Blob BinaryField;
+	private Image Image;
 
-public String getTypeBinary() {
+	public Sighting() {	}
+
+	
+	public String getTypeBinary() {
 		return TypeBinary;
+	}
+
+	public Image getImage() {
+	return Image;
+}
+
+	public void setImage(Image image) {
+		Image = image;
+		
+		// write data to in-memory stream
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        BufferedImage bi = SwingFXUtils.fromFXImage(image, null);
+        try {
+			ImageIO.write(bi, "jpg", bos);
+	        this.BinaryField = new SerialBlob(bos.toByteArray());
+		} catch (IOException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+		
 	}
 
 	public void setTypeBinary(String typeBinary) {
@@ -32,6 +69,25 @@ public String getTypeBinary() {
 
 	public void setBinaryField(Blob binaryField) {
 		BinaryField = binaryField;
+		// qui sotto carico anche il campo image
+		if (binaryField == null) {
+			Image = null;
+		} 
+		else {
+		InputStream is;
+		try {
+			is = new BufferedInputStream(binaryField.getBinaryStream());
+			BufferedImage bi = ImageIO.read(is);
+			Image image = SwingFXUtils.toFXImage(bi,null);
+			Image=image;
+			is.close();
+		}
+		catch (SQLException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
+		
 	}
 
 	//	public Sighting(int id, String city, String shape, LocalDate date) {
@@ -42,7 +98,6 @@ public String getTypeBinary() {
 //		this.datetime=date;
 //				
 //	}
-	public Sighting() {	}
 	
 	public StringProperty FormattedDateProperty() { 
        	if (formattedDate == null) { 
