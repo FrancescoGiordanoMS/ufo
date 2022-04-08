@@ -1,24 +1,40 @@
 package it.polito.tdp.ufo;
 
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
+
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 
 public class MenuContestuale {
+	private Stage stage;
+	private ImageView imageView;
 
-	public MenuContestuale() {
-		// TODO Auto-generated constructor stub
+	public MenuContestuale(Stage st, ImageView im) {
+		this.stage = st;
+		this.imageView = im;
 	}
-		
-	public static ContextMenu getMenuContestuale() {
-	final ContextMenu cm = new ContextMenu();
-	final String Menu1="Download and view";
+
+	public ContextMenu getMenuContestuale() {
+		final ContextMenu cm = new ContextMenu();
+		final String Menu1="Download and view";
 
 		cm.addEventFilter(MouseEvent.MOUSE_RELEASED, new EventHandler<MouseEvent>() {
 			@Override
@@ -47,23 +63,47 @@ public class MenuContestuale {
 		return cm;
 	}
 
-	private static void DownloadAndView() {
-		 try
-	        {
-	            // Command to create an external process
-	            //String command = "C:\\Program Files (x86)"+
-	            //     "\\Google\\Chrome\\Application\\chrome.exe";
-	            String command = "C:\\Program Files\\paint.net\\paintdotnet.exe 106_0627.jpg";
+	private void DownloadAndView() {
+		File SavedFile=null;
+		try
+		{
+			MenuBar menuBar = new MenuBar();
+			Group root = new Group(menuBar);
+			Scene scene = new Scene(root, 595, 355);  
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Save");
+			fileChooser.getExtensionFilters().addAll(new ExtensionFilter("All Files", "*.*"));
+			SavedFile=fileChooser.showSaveDialog(stage);
+			if (SavedFile==null) {
+				System.out.println("Nessun file indicato");
+				return;
+			}
+			// qui estraggo il file e lo registro sul pc
+			//File outputFile = new File("C:/JavaFX/");
+		    BufferedImage bImage = SwingFXUtils.fromFXImage(imageView.getImage(), null);
+		    try {
+		      ImageIO.write(bImage, "jpg", SavedFile);
+		    } catch (IOException e) {
+		      throw new RuntimeException(e);
+		    }
+			
+			
+			
+			
+			// Command to create an external process
+			//String command = "C:\\Program Files (x86)"+
+			//     "\\Google\\Chrome\\Application\\chrome.exe";
+			String command = "C:\\Program Files\\paint.net\\paintdotnet.exe "+SavedFile;
 
-	  
-	            // Running the above command
-	            Runtime run  = Runtime.getRuntime();
-	            Process proc = run.exec(command);
-	        }
-	  
-	        catch (IOException e)
-	        {
-	            e.printStackTrace();
-	        }
+
+			// Running the above command
+			Runtime run  = Runtime.getRuntime();
+			Process proc = run.exec(command);
+		}
+
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

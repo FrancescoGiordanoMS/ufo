@@ -65,8 +65,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 public class FXMLController {
@@ -119,7 +119,6 @@ public class FXMLController {
 	 @FXML
 	 private ImageView IMV;
 
-
 	@FXML
 	private TableColumn<Sighting, String> col_shape;
 
@@ -151,6 +150,7 @@ public class FXMLController {
 
 	//----------------------------------------------------------------------------------------------------
 	private Model model;
+	private Stage stage;
 	private enum StatoButtonSave {
 		INSERT,
 		MODIFY,
@@ -159,12 +159,14 @@ public class FXMLController {
 	private StatoButtonSave ButtonSave;
 
 	Integer index = -1;
+	Method meth = null;
 	ObservableList<Sighting> obs = FXCollections.observableArrayList();
 
 	
 	@FXML
     void handleMenuContestuale(MouseEvent e) {
-		ContextMenu cm = MenuContestuale.getMenuContestuale();
+		MenuContestuale mc = new MenuContestuale(stage, IMV);
+		ContextMenu cm= mc.getMenuContestuale();
 		if (e.getButton() == MouseButton.SECONDARY) {
             cm.show(IMV, e.getScreenX(), e.getScreenY());
         } else {
@@ -256,8 +258,6 @@ public class FXMLController {
 
 	private boolean SaveModify() {
 		index = TVUfo.getSelectionModel().getSelectedIndex();
-		BufferedImage bi;
-		Image im;
 		if (index >= 0) {
 			TVUfo.getSelectionModel().getSelectedItem().setCity(TFCity.getText());
 			Sighting sig = TVUfo.getSelectionModel().getSelectedItem();
@@ -330,13 +330,16 @@ public class FXMLController {
 		txtMessaggio.setText("Gli UFO della forma "+forma+" sono: "+count);
 	}
 
-	Method meth = null;
 
 	public void setModel(Model m) {
 		this.model = m ;
 		boxForma.getItems().addAll(this.model.getFormeUFO()) ;
-
 	}
+	
+	public void setStage(Stage s) {
+		this.stage= s;
+	}
+	
 
 	@FXML
 	void CaricaDati(ActionEvent event) {
@@ -401,22 +404,6 @@ public class FXMLController {
 			e.printStackTrace();
 		}
 
-		//		try {
-		//			testInvoke();
-		//		} catch (Exception e) {
-		//			// TODO Auto-generated catch block
-		//			e.printStackTrace();
-		//		}
-		//
-
-		//Method m1 = FXMLController.class.getDeclaredMethod("test");
-		/*
-		 * //FXMLController obj = new FXMLController(); //Class<?> classObj =
-		 * obj.getClass(); TestClass obj = new TestClass(); //Class classObj =
-		 * obj.getClass(); Method m1 = TestClass.class.getDeclaredMethod("test");
-		 * //m1.invoke(); int x=1;
-		 */
-
 		System.out.println("Working Directory = " + System.getProperty("user.dir"));
 
 
@@ -428,26 +415,6 @@ public class FXMLController {
 				DPData.setValue(newVal.getDatetime());
 				CBShape.setValue(newVal.getShape());
 				IMV.setImage(newVal.getImage());
-				
-//				Blob BlobImage = newVal.getBinaryField();
-//				if (BlobImage == null) {
-//					IMV.setImage(null);
-//				} 
-//				else {
-//				InputStream is;
-//				try {
-//					is = new BufferedInputStream(BlobImage.getBinaryStream());
-//					BufferedImage bi = ImageIO.read(is);
-//					Image image = SwingFXUtils.toFXImage(bi,null);
-//					IMV.setImage(image);
-//					is.close();
-//				}
-//				catch (SQLException | IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				}
-
 			}
 		});
 

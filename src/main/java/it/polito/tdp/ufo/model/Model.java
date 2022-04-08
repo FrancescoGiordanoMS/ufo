@@ -11,9 +11,6 @@ public class Model {
 
 	private List<String> formeUFO = null ;
 	
-	
-
-	
 	public List<String> getFormeUFO() {
 		if (this.formeUFO==null) {
 			SightingDAO dao = new SightingDAO() ;
