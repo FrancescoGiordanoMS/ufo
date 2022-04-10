@@ -65,6 +65,10 @@ public class MenuContestuale {
 
 	private void DownloadAndView() {
 		File SavedFile=null;
+		if (imageView.getImage()==null) {
+			System.out.println("Non c'è alcuna immagine");
+			return;
+		}
 		try
 		{
 			MenuBar menuBar = new MenuBar();
@@ -72,14 +76,13 @@ public class MenuContestuale {
 			Scene scene = new Scene(root, 595, 355);  
 			FileChooser fileChooser = new FileChooser();
 			fileChooser.setTitle("Save");
-			fileChooser.getExtensionFilters().addAll(new ExtensionFilter("All Files", "*.*"));
+			fileChooser.getExtensionFilters().addAll(new ExtensionFilter("file jpg", "*.jpg"));
 			SavedFile=fileChooser.showSaveDialog(stage);
 			if (SavedFile==null) {
 				System.out.println("Nessun file indicato");
 				return;
 			}
 			// qui estraggo il file e lo registro sul pc
-			//File outputFile = new File("C:/JavaFX/");
 		    BufferedImage bImage = SwingFXUtils.fromFXImage(imageView.getImage(), null);
 		    try {
 		      ImageIO.write(bImage, "jpg", SavedFile);

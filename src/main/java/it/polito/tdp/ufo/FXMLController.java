@@ -53,6 +53,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
+import javafx.scene.control.SelectionModel;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
@@ -259,8 +260,8 @@ public class FXMLController {
 	private boolean SaveModify() {
 		index = TVUfo.getSelectionModel().getSelectedIndex();
 		if (index >= 0) {
-			TVUfo.getSelectionModel().getSelectedItem().setCity(TFCity.getText());
 			Sighting sig = TVUfo.getSelectionModel().getSelectedItem();
+			sig.setCity(TFCity.getText());
 			sig.setImage(IMV.getImage());
 			model.DBModify(sig);
 			TVUfo.refresh();
@@ -386,8 +387,8 @@ public class FXMLController {
 		// vedi http://dgimenes.com/blog/2014/03/06/javafx-formatting-data-in-tableview.html
 		// Questo è il primo modo per formattare la colonna data
 		//col_FormattedDate.setCellValueFactory(new FormattedDateValueFactory<Sighting>("FormattedDate","MM/dd/yyyy"));
-		Bindings.bindBidirectional(TFCity.textProperty(), TFCity1.textProperty());     
-
+		Bindings.bindBidirectional(TFCity.textProperty(), TFCity1.textProperty());
+		
 		// Questo è il secondo modo che mi pare meno contorto... vedi formattazione date
 		col_FormattedDate.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Sighting, String>, ObservableValue<String>>() {
 			public ObservableValue<String> call(TableColumn.CellDataFeatures<Sighting, String> p) {
